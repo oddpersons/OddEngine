@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity
+    Name="f5bc7bc9-fa82-4fa0-b608-eddbda45acfc"
+    Publisher="CN=OddPe"
+    Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="f5bc7bc9-fa82-4fa0-b608-eddbda45acfc" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <Properties>
+    <DisplayName>Direct2DTest</DisplayName>
+    <PublisherDisplayName>OddPe</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Direct2DTest.App">
+      <uap:VisualElements DisplayName="Direct2DTest" Description="A project for a C++/WinRT Universal Windows Platform (UWP) app directly implementing CoreApplication"
+        Square150x150Logo="Assets\Logo.png" Square44x44Logo="Assets\SmallLogo.png" BackgroundColor="#464646">
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.props')" />
   <Import Project="..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -75,6 +76,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VCInstallDir)UnitTest\include;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(VCInstallDir)UnitTest\lib;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,6 +103,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>WindowsApp.lib;kernel32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -161,13 +165,16 @@
   <ItemGroup>
     <ClInclude Include="D2DHelper.h" />
     <ClInclude Include="dllmain.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpriteConfiguration.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D2DHelper.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -182,6 +189,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -189,5 +197,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\Direct2DTest\packages\Microsoft.Windows.CppWinRT.2.0.190506.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.190530.8\build\native\Microsoft.Windows.CppWinRT.targets'))" />
   </Target>
+  <PropertyGroup>
+    <DefaultLanguage>en-US</DefaultLanguage>
+  </PropertyGroup>
 </Project>

@@ -12,6 +12,7 @@
 #include <winrt/Windows.UI.Composition.h>
 #include <winrt/Windows.UI.Input.h>
 #include <winrt/Windows.Data.Json.h>
+#include <winrt/Windows.Storage.h>
 
 #include <chrono>
 #include <ctime>

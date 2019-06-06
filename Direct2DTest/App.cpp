@@ -2,6 +2,7 @@
 #include "App.h"
 #include "..\OddEngine\dllmain.h"
 
+
 using namespace winrt;
 
 using namespace Windows;
@@ -9,6 +10,8 @@ using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI;
 using namespace Windows::UI::Core;
 using namespace Windows::Graphics::Display;
+using namespace Windows::Gaming::Input;
+//using namespace Windows::Foundation;
 
 
 constexpr D2D1_COLOR_F color_white{ 1.0f,  1.0f,  1.0f,  1.0f };
@@ -23,8 +26,12 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 	winrt::com_ptr<ID2D1SolidColorBrush> m_brush;
 	winrt::com_ptr<IDWriteFactory> m_writeFactory;
 	winrt::com_ptr<IDWriteTextFormat> m_systemTextFormat;
-	double LastFPS = 0;
+	
 	float m_dpi{};
+
+	double LastFPS = 0;
+	bool Shutdown = false;
+	std::unique_ptr<std::vector<Gamepad>> GamepadList{ new std::vector<Gamepad>() };
 
 	std::unique_ptr<SpriteConfiguration> SpriteLib;
 
@@ -33,16 +40,14 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 		return *this;
 	}
 
-	void Initialize(CoreApplicationView const&)
-	{
-		testclass x;
-		x.x = 5;
+	void Initialize(CoreApplicationView const&) {
 
-		
 	}
 
 	void Load(hstring const&)
 	{
+		using namespace winrt::Windows::Foundation;
+
 		CoreWindow const window{ CoreWindow::GetForCurrentThread() };
 
 		window.SizeChanged([&](auto && ...)
@@ -67,15 +72,37 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 					Render();
 				}
 			});
-
-		window.KeyDown([&](CoreWindow const& win, KeyEventArgs const& handler)
-			{
-				Render();
-			});
 		
+		window.Closed({this, &App::OnClose});
+		
+		Gamepad::GamepadAdded({ this, &App::OnGamepadAdded });
+		Gamepad::GamepadRemoved({ this, &App::OnGamepadRemoved });
 
 		m_factory = CreateFactory();
 		CreateDeviceIndependentResources();
+	}
+
+	void OnGamepadAdded(IInspectable const& sender, Gamepad const& args)
+	{
+		GamepadList->push_back(args);
+	}
+
+	void OnGamepadRemoved(IInspectable const& sender, Gamepad const& args)
+	{
+		Gamepad *ToRemove;
+		
+		for (auto x = GamepadList->begin(); x != GamepadList->end(); x++) 
+		{
+			if(*x == args)
+			{
+				//ToRemove = &x;
+			}
+		}
+	}
+
+	void OnClose(CoreWindow const& win, CoreWindowEventArgs const& args)
+	{
+		Shutdown = true;
 	}
 
 	void Uninitialize()
@@ -87,9 +114,12 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 		CoreWindow const window{ CoreWindow::GetForCurrentThread() };
 		window.Activate();
 
-		Render();
-		CoreDispatcher const dispatcher{ window.Dispatcher() };
-		dispatcher.ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
+		while (Shutdown == false) {
+			CoreDispatcher const dispatcher{ window.Dispatcher() };
+			dispatcher.ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+			
+			Render();
+		}
 	}
 
 	void SetWindow(CoreWindow const&) {}
@@ -189,54 +219,7 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 		}
 	}
 
-	void CreateDeviceIndependentResources()
-	{
-
-		com_ptr<IWICImagingFactory> pFactory;
-		
-
-		winrt::hresult hr;
-
-		hr = CoCreateInstance(
-			CLSID_WICImagingFactory,
-			NULL,
-			CLSCTX_INPROC_SERVER,
-			//IID_PPV_ARGS(&pFactory)
-			__uuidof(IWICImagingFactory),
-			(void**)pFactory.put()
-		);
-
-		winrt::check_hresult(hr);
-
-		std::wstring path{ L"{ \
-			\"Path\" : \"Assets\\\\test.png\", \
-			\"PerRow\" : 2, \
-			\"Height\" : 50 \
-			}"
-		};
-		SpriteLib = std::make_unique<SpriteConfiguration>(
-			path,
-			pFactory.get()
-		);
-
-		hr = DWriteCreateFactory(
-			DWRITE_FACTORY_TYPE_SHARED,
-			__uuidof(IDWriteFactory),
-			reinterpret_cast<IUnknown * *>(m_writeFactory.put())
-		);
-		winrt::check_hresult(hr);
-
-		m_writeFactory->CreateTextFormat(
-			L"Lucida Console",
-			NULL,
-			DWRITE_FONT_WEIGHT_REGULAR,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			12.0f,
-			L"en-us",
-			m_systemTextFormat.put()
-		);
-	}
+	void CreateDeviceIndependentResources();
 
 	void CreateDeviceResources()
 	{
@@ -261,4 +244,51 @@ struct App : implements<App, IFrameworkViewSource, IFrameworkView>
 int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
 {
 	CoreApplication::Run(winrt::make<App>());
+}
+
+inline void App::CreateDeviceIndependentResources()
+{
+	com_ptr<IWICImagingFactory> pFactory;
+
+	winrt::hresult hr;
+
+	hr = CoCreateInstance(
+		CLSID_WICImagingFactory,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		//IID_PPV_ARGS(&pFactory)
+		__uuidof(IWICImagingFactory),
+		(void**)pFactory.put()
+	);
+
+	winrt::check_hresult(hr);
+
+	std::wstring path{ L"{ \
+			\"Path\" : \"Assets\\\\test.png\", \
+			\"PerRow\" : 2, \
+			\"Height\" : 50 \
+			}"
+	};
+	SpriteLib = std::make_unique<SpriteConfiguration>(
+		path,
+		pFactory.get()
+		);
+	
+	hr = DWriteCreateFactory(
+		DWRITE_FACTORY_TYPE_SHARED,
+		__uuidof(IDWriteFactory),
+		reinterpret_cast<IUnknown * *>(m_writeFactory.put())
+	);
+	winrt::check_hresult(hr);
+
+	m_writeFactory->CreateTextFormat(
+		L"Lucida Console",
+		NULL,
+		DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		12.0f,
+		L"en-us",
+		m_systemTextFormat.put()
+	);
 }

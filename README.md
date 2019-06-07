@@ -12,6 +12,6 @@ As of now this project compiles and runs, but it doesn't do a whole lot.  It loa
 ## Expected Features 
 (In no particular order)
 1. Ability to create simplistic games
-1. Full UI support
-1. Impliment some level of scripting language
+1. Full UI element support
+1. Impliment some level of scripting language (Undecided how this fits into the engine yet)
 1. Conroller support for Game Pads, Keyboards, Mice

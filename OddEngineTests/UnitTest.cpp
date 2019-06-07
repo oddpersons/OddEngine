@@ -6,12 +6,13 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace OddEngineTests
 {
-    TEST_CLASS(UnitTest1)
+    TEST_CLASS(OddEngineTests)
     {
     public:
-        TEST_METHOD(TestMethod1)
+        TEST_METHOD(InitGameEngine)
         {
-			
+			std::unique_ptr<GameEngine> TestEngine { new GameEngine(L"TestAssets\Gameobject.json") };
+			Assert::IsTrue(true);
             // TODO: Your test code here
         }
     };

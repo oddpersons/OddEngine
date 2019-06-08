@@ -167,6 +167,9 @@
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)TestAssets $(OutputPath) /I /Y /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

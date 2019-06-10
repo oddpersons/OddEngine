@@ -5,12 +5,12 @@
 
 using namespace winrt;
 
-using namespace Windows;
-using namespace Windows::ApplicationModel::Core;
-using namespace Windows::UI;
-using namespace Windows::UI::Core;
-using namespace Windows::Graphics::Display;
-using namespace Windows::Gaming::Input;
+using namespace winrt::Windows;
+using namespace winrt::Windows::ApplicationModel::Core;
+using namespace winrt::Windows::UI;
+using namespace winrt::Windows::UI::Core;
+using namespace winrt::Windows::Graphics::Display;
+using namespace winrt::Windows::Gaming::Input;
 //using namespace Windows::Foundation;
 
 

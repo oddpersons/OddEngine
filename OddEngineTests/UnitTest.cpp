@@ -11,7 +11,7 @@ namespace OddEngineTests
     public:
         TEST_METHOD(InitGameEngine)
         {
-			std::unique_ptr<GameEngine> TestEngine { new GameEngine(L"TestAssets\Gameobject.json") };
+			//std::unique_ptr<GameEngine> TestEngine { new GameEngine(L"TestAssets\Gameobject.json") };
 			Assert::IsTrue(true);
             // TODO: Your test code here
         }

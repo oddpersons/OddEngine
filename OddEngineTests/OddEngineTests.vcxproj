@@ -169,7 +169,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)TestAssets $(OutputPath) /I /Y /E</Command>
+      <Command>xcopy $(ProjectDir)TestAssets $(OutputPath)TestAssets /I /Y /E /F</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
